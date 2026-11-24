@@ -408,6 +408,22 @@ class EquipmentViewSet(ModelViewSet):
 
 и настроен whitenoise
 
+## Celery, Beat и Flower
+
+Celery использует Redis как брокер и хранилище результатов. Установите Redis и задайте `CELERY_BROKER_URL` и `CELERY_RESULT_BACKEND` при необходимости.
+
+Запускайте процессы из корня проекта в отдельных терминалах:
+
+```shell
+celery -A core worker -l info
+celery -A core beat -l info
+celery -A core flower --port=5555
+```
+
+Flower будет доступен по адресу `http://localhost:5555`. Для production ограничьте доступ к Flower на уровне сети или прокси.
+
+Письма в development выводятся в консоль. В production задайте SMTP-переменные `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS` и `DEFAULT_FROM_EMAIL`.
+
 **⬅️ Пример:**
 
 # core/settings/base.py

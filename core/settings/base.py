@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from celery.schedules import crontab
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 from core.settings.jazzmin import JAZZMIN_SETTINGS
@@ -108,6 +109,22 @@ USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
+CELERY_RESULT_BACKEND = os.getenv(
+    "CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/0"
+)
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULE = {
+    "clean-inactive-users-every-10-minutes": {
+        "task": "apps.testapp.tasks.clean_inactive_users_task",
+        "schedule": 600.0,
+    },
+    "daily-admin-report-at-0900": {
+        "task": "apps.testapp.tasks.send_daily_admin_report_task",
+        "schedule": crontab(hour=9, minute=0),
+    },
+}
 
 
 LANGUAGES = [

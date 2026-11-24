@@ -4,6 +4,7 @@ import os
 DEBUG = True
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 ALLOWED_HOSTS = ["*"]
 
